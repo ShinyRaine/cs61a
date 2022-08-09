@@ -1,3 +1,6 @@
+from operator import truediv
+
+
 def coords(fn, seq, lower, upper):
     """
     >>> seq = [-4, -2, 0, 1, 3]
@@ -19,7 +22,12 @@ def riffle(deck):
     [0, 10, 1, 11, 2, 12, 3, 13, 4, 14, 5, 15, 6, 16, 7, 17, 8, 18, 9, 19]
     """
     "*** YOUR CODE HERE ***"
-    return _______
+    m = len(deck) // 2
+    res = []
+    for i in range(m): 
+      res.append(deck[i])
+      res.append(deck[m + i])
+    return res
 
 
 def berry_finder(t):
@@ -40,6 +48,15 @@ def berry_finder(t):
     True
     """
     "*** YOUR CODE HERE ***"
+    if label(t) == 'berry': 
+      return True
+    if is_leaf(t):
+      return False
+    b = branches(t)
+    for l in b:
+      if berry_finder(l):
+        return True
+    return False
 
 
 def sprout_leaves(t, leaves):
@@ -76,6 +93,11 @@ def sprout_leaves(t, leaves):
           2
     """
     "*** YOUR CODE HERE ***"
+    b = [tree(i) for i in leaves]
+    if is_leaf(t):
+      return tree(label(t), b)
+
+    return tree(label(t), [sprout_leaves(i, leaves) for i in branches(t)])
 
 # Abstraction tests for sprout_leaves and berry_finder
 def check_abstraction():
