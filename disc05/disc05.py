@@ -54,3 +54,43 @@ def find_path(tree, x, l = []):
 # t = tree(2, [tree(7, [tree(3), tree(6, [tree(5), tree(11)])] ), tree(15)])
 # print(find_path(t, 5))
 # print(find_path(t, 10))
+
+def add_this_many(x, el, lst):
+  assert type(lst) == list
+  i = 0
+  while i < x:
+    lst.append(el)
+    i += 1
+
+def group_by(s, fn):
+  res = {}
+  for i in s:
+    t = fn(i)
+    if type(res.get(t)) == list:
+      res[t].append(i)
+    else:
+      res[t] = [i]
+  return res
+
+# print(group_by(range(-3, 4), lambda x: x * x))
+
+def partition_options(total, biggest):
+  if total == 0:
+    return [[]]
+  if biggest == 0:
+    return []
+  if total == 1:
+    return [[1]]
+  with_biggest = [[biggest] + i for i in partition_options(total - biggest, biggest)]
+  without_biggest = partition_options(total, biggest - 1)
+
+  return with_biggest + without_biggest
+
+# print(partition_options(4, 3))
+
+def min_elements(T, lst):
+  if T == 0:
+    return 0
+  return min([1 + min_elements(T - i, lst) for i in lst if T >= i])
+
+print(min_elements(10, [4, 2, 1]))
