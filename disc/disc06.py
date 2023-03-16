@@ -32,6 +32,8 @@ def nonlocalist():
   return prepend, lambda x: get(x)
 
 
+f = lambda n: print(*range(1, n+1), sep='\n')
+
 square = lambda x: x * x
 double = lambda x: 2 * x
 def memory(x, f):
