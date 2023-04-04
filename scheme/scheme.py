@@ -70,7 +70,11 @@ def eval_all(expressions, env):
     2
     """
     # BEGIN PROBLEM 7
-    return scheme_eval(expressions.first, env) # change this line
+    res = None
+    while expressions:
+        res = scheme_eval(expressions.first, env)
+        expressions = expressions.rest
+    return res
     # END PROBLEM 7
 
 ################
@@ -121,7 +125,14 @@ class Frame(object):
         <{a: 1, b: 2, c: 3} -> <Global Frame>>
         """
         # BEGIN PROBLEM 10
-        "*** YOUR CODE HERE ***"
+        if len(formals) != len(vals):
+            raise SchemeError('number of argument values does not match')
+        f = Frame(self)
+        while formals:
+            f.define(formals.first, vals.first)
+            formals = formals.rest
+            vals = vals.rest
+        return f
         # END PROBLEM 10
 
 ##############
@@ -188,7 +199,7 @@ class LambdaProcedure(Procedure):
         """Make a frame that binds my formal parameters to ARGS, a Scheme list
         of values, for a lexically-scoped call evaluated in my parent environment."""
         # BEGIN PROBLEM 11
-        "*** YOUR CODE HERE ***"
+        return self.env.make_child_frame(self.formals, args)
         # END PROBLEM 11
 
     def __str__(self):
@@ -247,11 +258,14 @@ def do_define_form(expressions, env):
     if scheme_symbolp(target):
         validate_form(expressions, 2, 2) # Checks that expressions is a list of length exactly 2
         # BEGIN PROBLEM 5
-        env.define(target, expressions.rest)
+        env.define(target, scheme_eval(expressions.rest.first, env))
+        return target
         # END PROBLEM 5
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         # BEGIN PROBLEM 9
-        "*** YOUR CODE HERE ***"
+        f = do_lambda_form(Pair(target.rest, expressions.rest), env)
+        env.define(target.first, f)
+        return target.first
         # END PROBLEM 9
     else:
         bad_target = target.first if isinstance(target, Pair) else target
@@ -292,7 +306,7 @@ def do_lambda_form(expressions, env):
     formals = expressions.first
     validate_formals(formals)
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    return LambdaProcedure(formals, expressions.rest, env)
     # END PROBLEM 8
 
 def do_if_form(expressions, env):
