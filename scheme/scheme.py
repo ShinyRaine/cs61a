@@ -338,7 +338,14 @@ def do_and_form(expressions, env):
     False
     """
     # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
+    last = True
+    while expressions:
+        last = scheme_eval(expressions.first, env)
+        if last is False:
+            return last
+        else:
+            expressions = expressions.rest
+    return last
     # END PROBLEM 12
 
 def do_or_form(expressions, env):
@@ -355,7 +362,14 @@ def do_or_form(expressions, env):
     6
     """
     # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
+    last = False
+    while expressions:
+        last = scheme_eval(expressions.first, env)
+        if last or last is 0:
+            return last
+        else:
+            expressions = expressions.rest
+    return last
     # END PROBLEM 12
 
 def do_cond_form(expressions, env):
@@ -375,7 +389,11 @@ def do_cond_form(expressions, env):
             test = scheme_eval(clause.first, env)
         if is_true_primitive(test):
             # BEGIN PROBLEM 13
-            "*** YOUR CODE HERE ***"
+            if test or test is 0:
+                result = eval_all(clause.rest, env)
+                if result:
+                    return result
+                return test
             # END PROBLEM 13
         expressions = expressions.rest
 
@@ -399,7 +417,17 @@ def make_let_frame(bindings, env):
         raise SchemeError('bad bindings list in let form')
     names, values = nil, nil
     # BEGIN PROBLEM 14
-    "*** YOUR CODE HERE ***"
+    while bindings:
+        binding = bindings.first
+        validate_form(binding, 2, 2)
+        names = Pair(binding.first, names)
+
+        validate_formals(names)
+
+        value = binding.rest
+        values = Pair(scheme_eval(value.first, env), values)
+
+        bindings = bindings.rest
     # END PROBLEM 14
     return env.make_child_frame(names, values)
 
@@ -525,7 +553,8 @@ class MuProcedure(Procedure):
         self.body = body
 
     # BEGIN PROBLEM 15
-    "*** YOUR CODE HERE ***"
+    def make_call_frame(self, args, env):
+        return env.make_child_frame(self.formals, args)
     # END PROBLEM 15
 
     def __str__(self):
@@ -540,9 +569,9 @@ def do_mu_form(expressions, env):
     validate_form(expressions, 2)
     formals = expressions.first
     validate_formals(formals)
-    # BEGIN PROBLEM 18
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 18
+    # BEGIN PROBLEM 15
+    return MuProcedure(formals, expressions.rest)
+    # END PROBLEM 15
 
 SPECIAL_FORMS['mu'] = do_mu_form
 
