@@ -389,10 +389,9 @@ def do_cond_form(expressions, env):
             test = scheme_eval(clause.first, env)
         if is_true_primitive(test):
             # BEGIN PROBLEM 13
-            result = eval_all(clause.rest, env)
-            if result is None:
+            if clause.rest is nil:
                 return test
-            return result
+            return eval_all(clause.rest, env)
             # END PROBLEM 13
         expressions = expressions.rest
 
