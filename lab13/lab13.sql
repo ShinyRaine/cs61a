@@ -23,8 +23,8 @@ CREATE TABLE favpets AS
   SELECT pet, COUNT(*) AS count
   FROM students
   GROUP BY pet
-  ORDER BY count
-  DESC LIMIT 10;
+  ORDER BY count DESC
+  LIMIT 10;
 
 
 CREATE TABLE dog AS
